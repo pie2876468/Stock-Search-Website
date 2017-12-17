@@ -589,16 +589,16 @@ var yClose;
 var yRange;
 var yVolume;//string form
 var yVolume2;//number form
-var xxDate = [];
-var xxDate0 = [];
-var xxDate1 = [];
-var xxDate2 = [];
-var xxDate3 = [];
-var xxDate4 = [];
-var xxDate5 = [];
-var xxDate6 = [];
-var xxDate7 = [];
-var xxDate8 = [];
+var xxDate = [];//the x-axis of Indicators
+var xxDate0 = [];//the x-axis of Indicators
+var xxDate1 = [];//the x-axis of Indicators
+var xxDate2 = [];//the x-axis of Indicators
+var xxDate3 = [];//the x-axis of Indicators
+var xxDate4 = [];//the x-axis of Indicators
+var xxDate5 = [];//the x-axis of Indicators
+var xxDate6 = [];//the x-axis of Indicators
+var xxDate7 = [];//the x-axis of Indicators
+var xxDate8 = [];//the x-axis of Indicators
 var yySMA = [];
 var yyEMA = [];
 var yySTOCH1 = [];
@@ -2081,9 +2081,11 @@ function StockPrice(xx,yy,yy2){
   });
 }
 
+//AngularJS part
 /**
  * You must include the dependency on 'ngMaterial'
  */
+//Autocomplete Function
 var app = angular.module('Allapp', ['ngMaterial','ngAnimate']);
   app.controller("autocompleteController", function($http){
     this.querySearch = function(query){
@@ -2102,6 +2104,7 @@ var app = angular.module('Allapp', ['ngMaterial','ngAnimate']);
         });
     };
   });
+//Sort Function
   app.controller('SelectAsyncController', function($timeout, $scope) {
     $scope.user0 = null;
     $scope.users0 = [
