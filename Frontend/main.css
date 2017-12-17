@@ -1,0 +1,18 @@
+button, select {
+    margin-bottom: 10px;
+}
+input.ng-invalid.ng-touched {
+    border: 1px solid red;
+}
+
+.animate-hide {
+  transition:all cubic-bezier(0.20, 0.40, 0.60, 0.90) 0.3s;
+  position: absolute;
+  left: 0;
+}
+
+.animate-hide.ng-hide {
+  left: -100%;
+  opacity:0;
+  padding:0 10px;
+}

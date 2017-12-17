@@ -1,0 +1,344 @@
+<html lang="en" ng-app ="Allapp">
+<head>
+  <title>Seperate Call</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="main.css">
+
+  <!-- Angular Material style sheet -->
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.1/angular-material.min.css">
+  <script src='http://connect.facebook.net/en_US/all.js'></script>
+  <!-- Angular Material requires Angular.js Libraries -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+  <!-- Angular Material Library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.1/angular-material.min.js"></script>
+  <!-- Angular Material requires Angular.js Libraries -->
+
+  <!-- Your application bootstrap  -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+  <script src="https://use.fontawesome.com/3fb186e631.js"></script>
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+  <!-- Your application bootstrap  -->
+
+  <!-- Toggle bootstrap -->
+  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+  <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+  <!-- Toggle bootstrap -->
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+  <!-- HighChart-->
+  <script src="https://code.highcharts.com/stock/highstock.js"></script>
+  <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+  <script src="http://code.highcharts.com/stock/highcharts-more.js"></script>
+  <!--<script src="/function.js" type="text/javascript"></script>-->
+  <script type="text/javascript" src="main.js"></script>
+</head>
+
+<body background="images/background.png">
+  <br>
+  <div style="background-color:#FFFFFF;border-radius:10px;" align="center" class="container">
+    <br>
+    <div>
+      <h1>Stock Market Search</h1>
+    </div>
+    <div class="row">
+      <div  class="col-md-3 col-xs-12" align='left'><label for="Symbol">Enter Stock Ticker Symbol:<span style="color:red">*</span></label></div>
+      <div class="col-md-6 col-xs-12" layout="column">
+        <form name="stockSymbolInput">
+          <div ng-controller="autocompleteController as ctrl" >
+            <md-autocomplete flex
+                    required
+                    md-selected-item="ctrl.selectedItem"
+                    md-search-text="ctrl.searchText"
+                    md-items="item in ctrl.querySearch(ctrl.searchText)"
+                    md-item-text="item.shortexp"
+                    md-delay="150"
+                    md-input-name="symbolInput"
+                    md-input-id="Symbol"
+                    placeholder="e.g. AAPL">
+                    <span md-highlight-text="ctrl.searchText">{{item.shortexp}}</span>
+                    <span md-highlight-text="ctrl.searchText">{{item.longexp}}</span>
+            </md-autocomplete>
+          </div>
+          <div align='left' ng-show= "stockSymbolInput.symbolInput.$invalid && stockSymbolInput.symbolInput.$touched">Please enter a stock ticker symbol.</div>
+        </form>
+      </div>
+      <div class="col-md-3 col-xs-12" align='left'>
+        <button class= "btn btn-primary " id="search" ng-disabled="stockSymbolInput.symbolInput.$invalid" ng-click="checked = 1;  havedata =1"><i class="fa fa-search" aria-hidden="true"></i>Get Quote</button>
+        <button class= "btn btn-secondary " id="Clear" ng-click="checked = 0; stockSymbolInput.symbolInput.$invalid=0; stockSymbolInput.symbolInput.$touched=0;  havedata =0"><i class="fa fa-refresh" aria-hidden="true"></i>Clear</button>
+        <button class= "btn btn-secondary " id="Read" style = 'display:none'>Read</button>
+      </div>
+    </div>
+    <br>
+  </div>
+  <!-- show result show result show result show result show result show result show result show result-->
+  <div class="container"><hr color="#FFFFFF" width="100%"></div>
+  <div style="background-color:#FFFFFF;border-radius:10px;" class="container">
+    <br>
+    <div id = "FavoriteList" class="card animate-hide" ng-show="checked==0 || checked==null">
+        <div class="card-header">
+          <div style="float:left; text-align:left">
+            <b>Favorite List</b>
+          </div>
+          <div style="float:right; text-align:right">
+            <span>Automatic Refresh: </span>
+            &nbsp
+            <button class= "btn btn-primary btn-sm" id="AutoRefreshtoggleOn" style="display: none"><span style ="font-size: 14pt;">On</span></button>
+            <button class= "btn btn-secondary btn-sm" id="AutoRefreshtoggleOff" ><span style ="font-size: 14pt;">Off</span></button>
+            <button class= "btn btn-secondary " id="Refresh"><i class="fa fa-refresh" aria-hidden="true"></i>
+            </button>
+            <button id="StockDetailsB" ng-click="havedata==1 ? checked = 1:checked = 0" type="button" class="btn btn-secondary" style="background-color:#FEFEFE; border-style: outset; border-width: 1px;">
+              <i class="fa fa-chevron-right" aria-hidden="true"></i>
+            </button>
+          </div>
+          <br>
+        </div>
+        <div class="card-block">
+          <div class="container">
+            <div class="container">
+              <br>
+              <div class="row" align='left'>
+                <div class="col-md-2 col-xs-12">
+                  <b>sort by</b>
+                </div>
+                <div class="col-md-2 col-xs-12" ng-controller="SelectAsyncController">
+                  <md-select placeholder="Default" ng-model="user0" md-on-close="ShowRRR0()" style="max-width: 200px; margin:0">
+                    <md-option ng-value="user0" ng-repeat="user0 in users0">{{user0.name}}</md-option>
+                  </md-select>
+                </div>
+                <br><br>
+                <div class="col-md-2 col-xs-12">
+                  <b>Order</b>
+                </div>
+                <div class="col-md-2 col-xs-12" ng-controller="SelectAsyncController2">
+                  <md-select placeholder="Ascending" ng-model="user" md-on-close="ShowRRR()" style="max-width: 200px;  margin:0">
+                    <md-option ng-value="user" ng-repeat="user in users">{{user.name}}</md-option>
+                  </md-select>
+                </div>
+                <br><br>
+              </div>
+            </div>
+            <br>
+            <div class="container col-md-12 col-xs-12">
+              <table class="table table-striped ol-md-12 col-xs-12">
+                <tbody id="FavoriteTable">
+                  <tr>
+                    <td>
+                      <b>Symbol </b>
+                    </td>
+                    <td>
+                      <b>Stock Price</b>
+                    </td>
+                    <td>
+                      <b>Change(Change Percent)</b>
+                    </td>
+                    <td>
+                      <b>Volume</b>
+                    </td>
+                    <td>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div id = "StockDetails" class="card animate-hide" ng-show="checked==1">
+      <div class="card-header">
+        <div style="float:left; text-align:left">
+          <button id="FavoriteListB" ng-click="checked = 0" type="button" class="btn btn-default" style="background-color:#FEFEFE; border-style: outset; border-width: 1px;">
+            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div style="float:center; text-align:center">
+          <b>Stock Details</b>
+        </div>
+      </div>
+      <div class="card-block">
+        <div class="card text-center">
+          <div class="card-header" style="background-color:#FFFFFF;">
+            <ul class="nav nav-pills" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#CScards" id ="CScardshd"></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#HCcards" id ="HCcardshd"></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#NFcards" id ="NFcardshd"></a>
+              </li>
+            </ul>
+          </div>
+          <div class="tab-content">
+            <div class="tab-pane active" id="CScards" role="tabpanel">
+              <div class="container">
+                <div class="row">
+                  <div  class="col-md-6 col-xs-12">
+                    <div class="container">
+                      <div class="container">
+                        <br>
+                        <span style="float:left; text-align:left"><b>Stock Details</b>
+                        </span>
+                        <span style="float:right; text-align:right">
+                          <button id="FavoriteAdd" type="button" class="btn btn-secondary" >
+                            <i width=30 class="fa fa-star-o" aria-hidden="true"></i>
+                          </button>
+                          <button id="FavoriteDelet" type="button" class="btn btn-secondary" >
+                            <i width=30 style="color:yellow" class="fa fa-star" aria-hidden="true"></i>
+                          </button>
+                          <button id="FavoriteFB" type="button" class="btn btn-secondary" >
+                            <img width=18 src='images/facebook.png'></img>
+                          </button>
+                        </span>
+                        <br>
+                        <br>
+                      </div>
+                      <table class="table table-striped" id="StockDetailsTable0">
+                      <tbody>
+                          <tr>
+                            <td><b>Stock Ticker Symbol</b></td>
+                            <td id = "T_symbol">  </td>
+                          </tr>
+                          <tr>
+                            <td><b>Last Price</b></td>
+                            <td id = "T_lastPrice">  </td>
+                          </tr>
+                          <tr>
+                            <td><b>Change(Change Percent)</b></td>
+                            <td id = "T_Change">  </td>
+                          </tr>
+                          <tr>
+                            <td><b>Timestamp</b></td>
+                            <td id = "T_Timestamp">  </td>
+                          </tr>
+                          <tr>
+                            <td><b>Open</b></td>
+                            <td id = "T_Open">  </td>
+                          </tr>
+                          <tr>
+                            <td><b>Close</b></td>
+                            <td id = "T_Close">  </td>
+                          </tr>
+                          <tr>
+                            <td><b>Day's Range</b></td>
+                            <td id = "T_Range">  </td>
+                          </tr>
+                          <tr>
+                            <td><b>Volume</b></td>
+                            <td id = "T_Volume">  </td>
+                          </tr>
+                      </tbody>
+                      </table>
+                      <div id="StockDetailsTable">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-xs-12">
+                    <div class="container">
+                    </div>
+                    <div class="container">
+                        <br>
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs row" role="tablist">
+                          <li class="nav-item col-xs-3" onclick="chartNumSelect(0)">
+                            <a class="nav-link active" data-toggle="tab" href="#Pricetab" role="tab">Price</a>
+                          </li>
+                          <li class="nav-item col-xs-3" onclick="chartNumSelect(1)">
+                            <a class="nav-link" data-toggle="tab" href="#SMAtab" role="tab">SMA</a>
+                          </li>
+                          <li class="nav-item col-xs-3" onclick="chartNumSelect(2)">
+                            <a class="nav-link" data-toggle="tab" href="#EMAtab" role="tab">EMA</a>
+                          </li>
+                          <li class="nav-item col-xs-3" onclick="chartNumSelect(3)">
+                            <a class="nav-link" data-toggle="tab" href="#STOCHtab" role="tab">STOCH</a>
+                          </li>
+                          <li class="nav-item col-xs-3" onclick="chartNumSelect(4)">
+                            <a class="nav-link" data-toggle="tab" href="#RSItab" role="tab">RSI</a>
+                          </li>
+                          <li class="nav-item col-xs-3" onclick="chartNumSelect(5)">
+                            <a class="nav-link" data-toggle="tab" href="#ADXtab" role="tab">ADX</a>
+                          </li>
+                          <li class="nav-item col-xs-3" onclick="chartNumSelect(6)">
+                            <a class="nav-link" data-toggle="tab" href="#CCItab" role="tab">CCI</a>
+                          </li>
+                          <li class="nav-item col-xs-3" onclick="chartNumSelect(7)">
+                            <a class="nav-link" data-toggle="tab" href="#BBANDStab" role="tab">BBANDS</a>
+                          </li>
+                          <li class="nav-item col-xs-3" onclick="chartNumSelect(8)">
+                            <a class="nav-link" data-toggle="tab" href="#MACDtab" role="tab">MACD</a>
+                          </li>
+                        </ul>
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="Pricetab" role="tabpanel">
+                            <div id='highchartcontainerPrice' style=' max-width: 1000px; margin: 0 auto'></div>
+                          </div>
+                          <div class="tab-pane" id="SMAtab" role="tabpanel">
+                            <div id='highchartcontainerSMA' style=' max-width: 1000px; margin: 0 auto'></div>
+                          </div>
+                          <div class="tab-pane" id="EMAtab" role="tabpanel">
+                            <div id='highchartcontainerEMA' style=' max-width: 1000px; margin: 0 auto'></div>
+                          </div>
+                          <div class="tab-pane" id="STOCHtab" role="tabpanel">
+                            <div id='highchartcontainerSTOCH' style=' max-width: 1000px; margin: 0 auto'></div>
+                          </div>
+                          <div class="tab-pane" id="RSItab" role="tabpanel">
+                            <div id='highchartcontainerRSI' style='  max-width: 1000px; margin: 0 auto'></div>
+                          </div>
+                          <div class="tab-pane" id="ADXtab" role="tabpanel">
+                            <div id='highchartcontainerADX' style='  max-width: 1000px; margin: 0 auto'></div>
+                          </div>
+                          <div class="tab-pane" id="CCItab" role="tabpanel">
+                            <div id='highchartcontainerCCI' style='  max-width: 1000px; margin: 0 auto'></div>
+                          </div>
+                          <div class="tab-pane" id="BBANDStab" role="tabpanel">
+                            <div id='highchartcontainerBBANDS' style='  max-width: 1000px; margin: 0 auto'></div>
+                          </div>
+                          <div class="tab-pane" id="MACDtab" role="tabpanel">
+                            <div id='highchartcontainerMACD' style='  max-width: 1000px; margin: 0 auto'></div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane" id="HCcards" role="tabpanel">
+              <div class = "container">
+                <div id='containerHistoricalChart' style=' max-width: 1000px; max-height: 1000px; margin: 0 auto'></div>
+              </div>
+            </div>
+            <div class="tab-pane" id="NFcards" role="tabpanel">
+              <div class = "container" id = "News0">
+                <br>
+                <div id = "News1" class = "well container" style="background-color:#ececec;border-radius:5px;text-align: left;"></div>
+                <br>
+                <div id = "News2" class = "well container" style="background-color:#ececec;border-radius:5px;text-align: left;"></div>
+                <br>
+                <div id = "News3" class = "well container" style="background-color:#ececec;border-radius:5px;text-align: left;"></div>
+                <br>
+                <div id = "News4" class = "well container" style="background-color:#ececec;border-radius:5px;text-align: left;"></div>
+                <br>
+                <div id = "News5" class = "well container" style="background-color:#ececec;border-radius:5px;text-align: left;"></div>
+                <br>
+              </div>
+              <div class = "container" id = "News11">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+  </div>
+</body>
+</html>
